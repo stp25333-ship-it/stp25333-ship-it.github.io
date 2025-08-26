@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Shooter - Jirachaya Hengchaeng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c2a 0%, #1a1a3e 50%, #2d1b69 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #gameCanvas {
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+            display: block;
+        }
+        
+        #playerName {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #00ffff;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #00ffff;
+            z-index: 100;
+        }
+        
+        #gameUI {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #ffffff;
+            font-size: 16px;
+            text-shadow: 0 0 5px #000;
+            z-index: 100;
+        }
+        
+        #startScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 200;
+        }
+        
+        #startButton {
+            padding: 15px 30px;
+            font-size: 24px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: transform 0.2s;
+        }
+        
+        #startButton:hover {
+            transform: scale(1.05);
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        <div id="playerName">Jirachaya Hengchaeng</div>
+        <div id="gameUI">
+            <div>Score: <span id="score">0</span></div>
+            <div>Health: <span id="health">100</span></div>
+        </div>
+        
+        <div id="startScreen">
+            <h1>🚀 SPACE SHOOTER 🚀</h1>
+            <p style="font-size: 20px; margin-bottom: 10px;">เกมยิงปืนอวกาศ</p>
+            <p style="font-size: 16px; margin-bottom: 20px;">ใช้ WASD หรือ ลูกศร เพื่อเคลื่อนที่</p>
+            <p style="font-size: 16px; margin-bottom: 20px;">คลิก หรือ กด Spacebar เพื่อยิง</p>
+            <button id="startButton">เริ่มเกม</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startScreen = document.getElementById('startScreen');
+        const startButton = document.getElementById('startButton');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Create animated stars background
+        function createStars() {
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(star);
+            }
+        }
+        createStars();
+        
+        let gameState = {
+            running: false,
+            score: 0,
+            health: 100
+        };
+        
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height - 100,
+            width: 40,
+            height: 40,
+            speed: 5,
+            color: '#00ffff'
+        };
+        
+        const bullets = [];
+        const enemies = [];
+        const particles = [];
+        
+        class Bullet {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 4;
+                this.height = 10;
+                this.speed = 8;
+                this.color = '#ffff00';
+            }
+            
+            update() {
+                this.y -= this.speed;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                ctx.shadowBlur = 0;
+            }
+        }
+        
+        class Enemy {
+            constructor() {
+                this.x = Math.random() * (canvas.width - 30);
+                this.y = -30;
+                this.width = 30;
+                this.height = 30;
+                this.speed = Math.random() * 3 + 1;
+                this.color = `hsl(${Math.random() * 60 + 300}, 70%, 50%)`;
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                
+                // Draw enemy as a diamond shape
+                ctx.beginPath();
+                ctx.moveTo(this.x + this.width/2, this.y);
+                ctx.lineTo(this.x + this.width, this.y + this.height/2);
+                ctx.lineTo(this.x + this.width/2, this.y + this.height);
+                ctx.lineTo(this.x, this.y + this.height/2);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.shadowBlur = 0;
+            }
+        }
+        
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 8;
+                this.vy = (Math.random() - 0.5) * 8;
+                this.life = 30;
+                this.color = color;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--;
+            }
+            
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life / 30;
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, 3, 3);
+                ctx.restore();
+            }
+        }
+        
+        const keys = {};
+        
+        document.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            if (e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                shoot();
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+        });
+        
+        canvas.addEventListener('click', shoot);
+        
+        function shoot() {
+            if (!gameState.running) return;
+            bullets.push(new Bullet(player.x + player.width/2 - 2, player.y));
+        }
+        
+        function spawnEnemy() {
+            if (Math.random() < 0.02) {
+                enemies.push(new Enemy());
+            }
+        }
+        
+        function updatePlayer() {
+            if (keys['a'] || keys['arrowleft']) {
+                player.x = Math.max(0, player.x - player.speed);
+            }
+            if (keys['d'] || keys['arrowright']) {
+                player.x = Math.min(canvas.width - player.width, player.x + player.speed);
+            }
+            if (keys['w'] || keys['arrowup']) {
+                player.y = Math.max(0, player.y - player.speed);
+            }
+            if (keys['s'] || keys['arrowdown']) {
+                player.y = Math.min(canvas.height - player.height, player.y + player.speed);
+            }
+        }
+        
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = player.color;
+            
+            // Draw player as a triangle (spaceship)
+            ctx.beginPath();
+            ctx.moveTo(player.x + player.width/2, player.y);
+            ctx.lineTo(player.x, player.y + player.height);
+            ctx.lineTo(player.x + player.width, player.y + player.height);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw engine glow
+            ctx.fillStyle = '#ff6b6b';
+            ctx.beginPath();
+            ctx.moveTo(player.x + player.width/4, player.y + player.height);
+            ctx.lineTo(player.x + player.width/2, player.y + player.height + 10);
+            ctx.lineTo(player.x + 3*player.width/4, player.y + player.height);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.shadowBlur = 0;
+        }
+        
+        function checkCollisions() {
+            // Bullet-Enemy collisions
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                    const bullet = bullets[i];
+                    const enemy = enemies[j];
+                    
+                    if (bullet.x < enemy.x + enemy.width &&
+                        bullet.x + bullet.width > enemy.x &&
+                        bullet.y < enemy.y + enemy.height &&
+                        bullet.y + bullet.height > enemy.y) {
+                        
+                        // Create explosion particles
+                        for (let k = 0; k < 10; k++) {
+                            particles.push(new Particle(enemy.x + enemy.width/2, enemy.y + enemy.height/2, enemy.color));
+                        }
+                        
+                        bullets.splice(i, 1);
+                        enemies.splice(j, 1);
+                        gameState.score += 10;
+                        break;
+                    }
+                }
+            }
+            
+            // Player-Enemy collisions
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const enemy = enemies[i];
+                if (player.x < enemy.x + enemy.width &&
+                    player.x + player.width > enemy.x &&
+                    player.y < enemy.y + enemy.height &&
+                    player.y + player.height > enemy.y) {
+                    
+                    enemies.splice(i, 1);
+                    gameState.health -= 20;
+                    
+                    // Create damage particles
+                    for (let k = 0; k < 15; k++) {
+                        particles.push(new Particle(player.x + player.width/2, player.y + player.height/2, '#ff6b6b'));
+                    }
+                }
+            }
+        }
+        
+        function updateGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            updatePlayer();
+            spawnEnemy();
+            
+            // Update and draw bullets
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                bullets[i].update();
+                bullets[i].draw();
+                if (bullets[i].y < 0) {
+                    bullets.splice(i, 1);
+                }
+            }
+            
+            // Update and draw enemies
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                enemies[i].update();
+                enemies[i].draw();
+                if (enemies[i].y > canvas.height) {
+                    enemies.splice(i, 1);
+                }
+            }
+            
+            // Update and draw particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            drawPlayer();
+            checkCollisions();
+            
+            // Update UI
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('health').textContent = Math.max(0, gameState.health);
+            
+            // Check game over
+            if (gameState.health <= 0) {
+                gameOver();
+            }
+        }
+        
+        function gameOver() {
+            gameState.running = false;
+            startScreen.innerHTML = `
+                <h1>🎮 GAME OVER 🎮</h1>
+                <p style="font-size: 24px; margin-bottom: 20px;">คะแนนของคุณ: ${gameState.score}</p>
+                <button id="restartButton">เล่นอีกครั้ง</button>
+            `;
+            startScreen.style.display = 'flex';
+            
+            document.getElementById('restartButton').addEventListener('click', startGame);
+        }
+        
+        function startGame() {
+            gameState.running = true;
+            gameState.score = 0;
+            gameState.health = 100;
+            bullets.length = 0;
+            enemies.length = 0;
+            particles.length = 0;
+            
+            player.x = canvas.width / 2;
+            player.y = canvas.height - 100;
+            
+            startScreen.style.display = 'none';
+            gameLoop();
+        }
+        
+        function gameLoop() {
+            if (gameState.running) {
+                updateGame();
+                requestAnimationFrame(gameLoop);
+            }
+        }
+        
+        startButton.addEventListener('click', startGame);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
