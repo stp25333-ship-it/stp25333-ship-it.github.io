@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แนะนำตัว: จิรชญา (หมูแฮม)</title>
+    <!-- โหลด Tailwind CSS เพื่อการจัดสไตล์ที่ง่ายและรวดเร็ว -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- โหลดฟอนต์ 'Mali' จาก Google Fonts เพื่อธีมที่น่ารัก -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* กำหนดฟอนต์หลักสำหรับ body */
+        body {
+            font-family: 'Mali', sans-serif;
+        }
+        /* กำหนดการเลื่อนหน้าจอแบบ smooth เมื่อคลิกลิงก์ */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* กำหนดสไตล์การเน้นข้อความในธีมสีแดง */
+        .text-gradient {
+            background-image: linear-gradient(to right, #ff416c 0%, #ff4b2b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-red-50 text-gray-800">
+
+    <!-- ส่วนของเมนูนำทาง (Navigation) -->
+    <nav class="sticky top-0 z-50 bg-white bg-opacity-80 backdrop-filter backdrop-blur-lg shadow-lg rounded-full mx-auto mt-4 max-w-lg p-2 flex justify-center space-x-4">
+        <a href="#home" class="py-2 px-4 rounded-full text-sm font-semibold hover:bg-red-200 transition-colors duration-300">หน้าแรก</a>
+        <a href="#about" class="py-2 px-4 rounded-full text-sm font-semibold hover:bg-red-200 transition-colors duration-300">เกี่ยวกับฉัน</a>
+        <a href="#interests" class="py-2 px-4 rounded-full text-sm font-semibold hover:bg-red-200 transition-colors duration-300">ความสนใจ</a>
+        <a href="#hobbies" class="py-2 px-4 rounded-full text-sm font-semibold hover:bg-red-200 transition-colors duration-300">งานอดิเรก</a>
+        <a href="#contact" class="py-2 px-4 rounded-full text-sm font-semibold hover:bg-red-200 transition-colors duration-300">ติดต่อ</a>
+    </nav>
+
+    <!-- ส่วนของหน้าแรก (Page 1) -->
+    <section id="home" class="min-h-screen flex items-center justify-center p-8">
+        <div class="text-center p-8 md:p-12 bg-white rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500 max-w-2xl">
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 text-gradient">สวัสดีค่ะ! ยินดีต้อนรับ!</h1>
+            <p class="text-xl md:text-2xl text-red-500 mb-6">สู่เว็บไซต์แนะนำตัวของ...</p>
+            <div class="relative w-40 h-40 mx-auto mb-6">
+                <!-- ใช้ภาพ placeholder แทนรูปจริง สามารถเปลี่ยนเป็น URL รูปภาพจริงได้ -->
+                <img src="https://placehold.co/160x160/FF4500/FFFFFF?text=%E2%99%A5" alt="ภาพโปรไฟล์" class="w-full h-full rounded-full border-4 border-red-300 shadow-xl object-cover transform rotate-6 transition-transform duration-500 hover:rotate-0">
+                <span class="absolute bottom-2 right-2 bg-red-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">หมูแฮม</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-700">จิรชญา เห่งแจ้ง</h2>
+        </div>
+    </section>
+
+    <!-- ส่วนของเกี่ยวกับฉัน (Page 2) -->
+    <section id="about" class="min-h-screen flex items-center justify-center p-8 bg-red-100">
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl transform hover:scale-105 transition-transform duration-500 max-w-3xl">
+            <h2 class="text-4xl font-bold mb-6 text-center text-red-600">❤️ เกี่ยวกับฉัน ❤️</h2>
+            <div class="space-y-6 text-lg md:text-xl">
+                <div class="flex items-center space-x-4">
+                    <span class="text-2xl">👤</span>
+                    <p>ชื่อ-นามสกุล: <span class="font-semibold text-red-500">จิรชญา เห่งแจ้ง</span></p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-2xl">✨</span>
+                    <p>ชื่อเล่น: <span class="font-semibold text-red-500">หมูแฮม</span></p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-2xl">🏫</span>
+                    <p>กำลังศึกษาอยู่ที่: <span class="font-semibold text-red-500">โรงเรียนสุรธรรมพิทักษ์</span></p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-2xl">⭐</span>
+                    <p>ความสนใจและงานอดิเรกหลัก ๆ คือเรื่องเกี่ยวกับคอมพิวเตอร์และเกมค่ะ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ส่วนของความสนใจ (Page 3) -->
+    <section id="interests" class="min-h-screen flex items-center justify-center p-8">
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl transform hover:scale-105 transition-transform duration-500 max-w-3xl">
+            <h2 class="text-4xl font-bold mb-6 text-center text-red-600">💻 ความสนใจด้านคอมพิวเตอร์ 🖥️</h2>
+            <div class="space-y-6 text-lg md:text-xl text-center">
+                <p>ฉันมีความหลงใหลในโลกของเทคโนโลยีและคอมพิวเตอร์มาโดยตลอด การได้เรียนรู้สิ่งใหม่ ๆ ไม่ว่าจะเป็นการเขียนโค้ด การออกแบบ หรือการทำความเข้าใจว่าอุปกรณ์เหล่านี้ทำงานอย่างไร คือสิ่งที่ทำให้ฉันมีความสุข</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-red-50 rounded-2xl shadow-inner border border-red-200">
+                        <span class="text-4xl mb-4 block">💡</span>
+                        <p class="font-semibold text-red-500">การเรียนรู้สิ่งใหม่</p>
+                        <p class="text-sm text-gray-600">ชอบศึกษาเทคโนโลยีที่กำลังเป็นที่นิยมและนำมาปรับใช้</p>
+                    </div>
+                    <div class="p-6 bg-red-50 rounded-2xl shadow-inner border border-red-200">
+                        <span class="text-4xl mb-4 block">🧠</span>
+                        <p class="font-semibold text-red-500">การแก้ปัญหา</p>
+                        <p class="text-sm text-gray-600">สนุกกับการหาวิธีแก้ไขปัญหาที่ซับซ้อนด้วยเทคโนโลยี</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ส่วนของงานอดิเรก (Page 4) -->
+    <section id="hobbies" class="min-h-screen flex items-center justify-center p-8 bg-red-100">
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl transform hover:scale-105 transition-transform duration-500 max-w-3xl">
+            <h2 class="text-4xl font-bold mb-6 text-center text-red-600">🎮 งานอดิเรก: การเล่นเกม 🕹️</h2>
+            <div class="space-y-6 text-lg md:text-xl text-center">
+                <p>นอกจากเรื่องคอมพิวเตอร์แล้ว งานอดิเรกที่ฉันรักมากที่สุดคือการเล่นเกมค่ะ ไม่ว่าจะเป็นเกมแนวไหน ทั้งเกมออนไลน์ เกมในคอมพิวเตอร์ หรือเกมบนมือถือ</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-red-50 rounded-2xl shadow-inner border border-red-200">
+                        <span class="text-4xl mb-4 block">🏆</span>
+                        <p class="font-semibold text-red-500">สนุกกับเพื่อนๆ</p>
+                        <p class="text-sm text-gray-600">การได้เล่นเกมกับเพื่อนๆ ช่วยให้ผ่อนคลายและได้ฝึกการทำงานเป็นทีม</p>
+                    </div>
+                    <div class="p-6 bg-red-50 rounded-2xl shadow-inner border border-red-200">
+                        <span class="text-4xl mb-4 block">🗺️</span>
+                        <p class="font-semibold text-red-500">การสำรวจโลกใหม่</p>
+                        <p class="text-sm text-gray-600">ชอบการได้เข้าไปผจญภัยในโลกแห่งจินตนาการที่เกมสร้างขึ้น</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ส่วนของติดต่อ/ขอบคุณ (Page 5) -->
+    <section id="contact" class="min-h-screen flex flex-col items-center justify-center p-8 text-center">
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl transform hover:scale-105 transition-transform duration-500 max-w-3xl">
+            <h2 class="text-4xl font-bold mb-6 text-center text-red-600">❤️ ขอบคุณที่เข้ามาชม! ❤️</h2>
+            <p class="text-xl md:text-2xl text-gray-700 mb-6">หวังว่าคุณจะรู้จักฉันมากขึ้นนะคะ</p>
+            <p class="text-lg md:text-xl text-red-500 mb-4">หากต้องการติดต่อ สามารถส่งข้อความมาได้ค่ะ</p>
+            <!-- ส่วนนี้เป็นการจำลองการแสดงที่อยู่ติดต่อ -->
+            <div class="space-y-4">
+                <p class="text-lg text-gray-600">
+                    <span class="font-bold">📱 โทรศัพท์:</span> 08x-xxx-xxxx
+                </p>
+                <p class="text-lg text-gray-600">
+                    <span class="font-bold">📧 อีเมล:</span> jiratchaya.h@email.com
+                </p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
